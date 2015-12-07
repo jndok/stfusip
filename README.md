@@ -27,7 +27,7 @@ sudo ./stfusip enable  /* this enables SIP */
 Here's a demo output:
 
 ```
-jndoks-Mac-Pro:ta_titto_sip jndok$ sudo su
+jndoks-Mac-Pro:stfusip jndok$ sudo su
 sh-3.2# whoami
 root
 sh-3.2# touch /System/yolo
