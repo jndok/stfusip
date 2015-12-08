@@ -15,6 +15,7 @@
 #include <mach/mach_voucher.h>
 #include <sys/syscall.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "ropnroll/ropnroll.h"
 #include "ropnroll/ropnroll_macros.h"
@@ -119,7 +120,7 @@ int main(int argc, char **argv)
   printf("\n");
 
   if (status==0) {
-    system("touch /System/test > /dev/null");
+    open("/System/test", O_CREAT);
     if(access("/System/test", F_OK) == -1) {
       printf("[+] System Integrity Protection (SIP) has been enabled.\n");
     } else {
@@ -127,10 +128,10 @@ int main(int argc, char **argv)
       return 5;
     }
   } else {
-    system("touch /System/test > /dev/null");
+    open("/System/test", O_CREAT);
     if(access("/System/test", F_OK) != -1) {
       printf("[-] System Integrity Protection (SIP) has been disabled.\n");
-      system("rm -rf /System/test");
+      unlink("/System/test");
     } else {
       printf("[!] System Integrity Protection (SIP) couldn't be disabled!\n");
       return 6;
